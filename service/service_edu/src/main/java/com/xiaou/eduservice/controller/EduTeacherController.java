@@ -1,17 +1,20 @@
 package com.xiaou.eduservice.controller;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xiaou.commonutils.R;
 import com.xiaou.eduservice.entity.EduTeacher;
+import com.xiaou.eduservice.entity.vo.queryTeacher;
 import com.xiaou.eduservice.service.EduTeacherService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.*;
 
-import org.springframework.web.bind.annotation.RestController;
-
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -36,9 +39,78 @@ public class EduTeacherController {
         List<EduTeacher> teacherList = eduTeacherService.list(null);
         return R.ok().data("item",teacherList);
     }
+    //实现分页查询效果
+    @ApiOperation(value = "分页查询教师信息")
+    @GetMapping("page/{current}/{limit}")
+    public R queryByPageTeacherList( @PathVariable long current,
+                                    @PathVariable long limit){
+        //1.创建page对象
+        Page<EduTeacher> page = new Page<>(current,limit);
+        //2.
+        eduTeacherService.page(page,null);
+        //3.获取记录总数
+        long total = page.getTotal();
+        //4获取分页查询的数据
+        List<EduTeacher> records = page.getRecords();
 
+        HashMap map = new HashMap<>();
+        map.put("total",total);
+        map.put("limit",records);
+        return R.ok().data(map);
+    }
 
+    //条件查询方法测试
+    @ApiOperation(value = "条件分页查询教师信息")
+    @PostMapping("pageTeacherCondtion/{current}/{limit}")
+    public R queryTeacherCondtion(@PathVariable long current,
+                                  @PathVariable long limit, @RequestBody(required = false) queryTeacher queryTeacher) {
+        //1.创建page对象
+        Page<EduTeacher> page = new Page<>(current,limit);
+        //2.构建条件
+        QueryWrapper<EduTeacher> wrapper = new QueryWrapper<>();
+        //3.获取vo实体对象
+        String name = queryTeacher.getName();//名称
+        Integer level = queryTeacher.getLevel();//级别
+        String begin = queryTeacher.getBegin();//开始时间
+        String end = queryTeacher.getEnd();//结束时间
+        //4.判断
+        if(!StringUtils.isEmpty(name)){
+            wrapper.like("name",name);
+        }
+        if(!StringUtils.isEmpty(level)){
+            wrapper.eq("level",level);
+        }
+        if(!StringUtils.isEmpty(begin)){
+            wrapper.ge("gmt_create",begin);
+        }
+        if(!StringUtils.isEmpty(end)){
+            wrapper.le("gmt_modified",end);
+        }
 
+        eduTeacherService.page(page,wrapper);
+        //3.获取记录总数
+        long total = page.getTotal();
+        //4获取分页查询的数据
+        List<EduTeacher> records = page.getRecords();
+
+        HashMap map = new HashMap<>();
+        map.put("total",total);
+        map.put("limit",records);
+        return R.ok().data(map);
+
+    }
+    /**
+     * 添加方法的接口
+     */
+    @PostMapping("addTeacher")
+    @ApiOperation(value = "添加教师信息")
+    public R addTeacher(@RequestBody EduTeacher eduTeacher){
+        boolean save = eduTeacherService.save(eduTeacher);
+        if(save){
+            return R.ok();
+        }else
+            return R.error();
+    }
 
 }
 
