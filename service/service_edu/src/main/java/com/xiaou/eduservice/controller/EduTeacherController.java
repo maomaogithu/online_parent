@@ -1,6 +1,7 @@
 package com.xiaou.eduservice.controller;
 
 
+import com.xiaou.commonutils.R;
 import com.xiaou.eduservice.entity.EduTeacher;
 import com.xiaou.eduservice.service.EduTeacherService;
 import io.swagger.annotations.Api;
@@ -31,9 +32,9 @@ public class EduTeacherController {
     //调用service中的方法 rest风格
     @GetMapping("queryAll")
     @ApiOperation(value = "查询所有教师信息")
-    public List<EduTeacher> queryAll(){
-        List<EduTeacher> list = eduTeacherService.list(null);
-        return list;
+    public R queryAll(){
+        List<EduTeacher> teacherList = eduTeacherService.list(null);
+        return R.ok().data("item",teacherList);
     }
 
 
