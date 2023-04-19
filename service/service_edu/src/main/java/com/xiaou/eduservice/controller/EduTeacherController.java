@@ -28,6 +28,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/eduservice/edu-teacher")
 @Api(value = "教师管理接口")
+@CrossOrigin
 public class EduTeacherController {
     //注入service
     @Autowired
@@ -87,6 +88,9 @@ public class EduTeacherController {
             wrapper.le("gmt_modified",end);
         }
 
+        //排序
+        wrapper.orderByDesc("gmt_create");
+
         eduTeacherService.page(page,wrapper);
         //3.获取记录总数
         long total = page.getTotal();
@@ -95,7 +99,7 @@ public class EduTeacherController {
 
         HashMap map = new HashMap<>();
         map.put("total",total);
-        map.put("limit",records);
+        map.put("rows",records);
         return R.ok().data(map);
 
     }
@@ -110,6 +114,44 @@ public class EduTeacherController {
             return R.ok();
         }else
             return R.error();
+    }
+    /**
+     * 删除
+     */
+    @ApiOperation(value = "逻辑删除教师信息")
+    @DeleteMapping("{id}")
+    public R deleteTeacherInfo(@PathVariable String id){
+        boolean remove = eduTeacherService.removeById(id);
+        if(remove){
+            return R.ok();
+        }else {
+            return R.error();
+        }
+    }
+    /**
+     * 根据id查询教师信息
+     *
+     */
+    //根据讲师id进行查询
+    @GetMapping("queryTeacherByid/{id}")
+    @ApiOperation(value = "根据id查询教师信息")
+    public R queryTeacherByid(@PathVariable String id) {
+        EduTeacher eduTeacher = eduTeacherService.getById(id);
+        return R.ok().data("teacher",eduTeacher);
+    }
+    /**
+     * 修改
+     */
+    //讲师修改功能
+    @PostMapping("updateTeacher")
+    @ApiOperation(value = "更新教师信息")
+    public R updateTeacher(@RequestBody EduTeacher eduTeacher) {
+        boolean flag = eduTeacherService.updateById(eduTeacher);
+        if(flag) {
+            return R.ok();
+        } else {
+            return R.error();
+        }
     }
 
 }
