@@ -19,7 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
  * @Date$ 2023/4/19
  **/
 @RestController
-@RequestMapping("/edu-online/uploadFileOss")
+@RequestMapping("/eduoss/uploadFileOss")
 @CrossOrigin
 @Api(value = "上传OSS接口")
 public class OssController {
@@ -31,7 +31,7 @@ public class OssController {
      * @return
      */
     @ApiOperation(value = "上传文件")
-    @PostMapping("/uploadFile/oss")
+    @PostMapping("/uploadFile")
     public R uploadFileOss(MultipartFile file){
        String returnUrl =  ossService.uploadAvatar(file);
         return R.ok().data("url",returnUrl);

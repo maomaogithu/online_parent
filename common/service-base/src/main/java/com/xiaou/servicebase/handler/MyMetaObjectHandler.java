@@ -1,8 +1,7 @@
 package com.xiaou.servicebase.handler;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
-import com.sun.org.slf4j.internal.Logger;
-import com.sun.org.slf4j.internal.LoggerFactory;
+
 import org.apache.ibatis.reflection.MetaObject;
 import org.springframework.stereotype.Component;
 
@@ -18,8 +17,6 @@ import java.util.Date;
  **/
 @Component
 public class MyMetaObjectHandler implements MetaObjectHandler {
-
-    private static final Logger LOGGER= LoggerFactory.getLogger(MyMetaObjectHandler.class);
     @Override
     public void insertFill(MetaObject metaObject) {
         //LOGGER.info("start insert fill ...");

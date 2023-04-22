@@ -21,6 +21,12 @@
             <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
+        <!--引入easyExcel依赖,还需引入poi依赖，由于父POM中已经引入，所以这里不需要-->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>easyexcel</artifactId>
+            <version>2.2.9</version>
+        </dependency>
     </dependencies>
 
 
