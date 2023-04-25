@@ -2,6 +2,7 @@ package com.xiaou.eduservice.mapper;
 
 import com.xiaou.eduservice.entity.EduCourseCollect;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.xiaou.eduservice.entity.vo.CrousePublishVo;
 
 /**
  * <p>

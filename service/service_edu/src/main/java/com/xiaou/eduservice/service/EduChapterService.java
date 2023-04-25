@@ -17,4 +17,8 @@ import java.util.ArrayList;
 public interface EduChapterService extends IService<EduChapter> {
 
     ArrayList<ChapterVo> getChapterVideoByCourseId(String courseId);
+
+    boolean deleteChapter(String chapterId);
+
+    void removeChapterByCrouseId(String courseId);
 }

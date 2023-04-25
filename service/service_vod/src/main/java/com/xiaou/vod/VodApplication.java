@@ -1,9 +1,11 @@
-package com.xiaou.oss;
+package com.xiaou.vod;
 
+import javafx.application.Application;
+import javafx.stage.Stage;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
-import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.ComponentScan;
 
 /**
@@ -11,14 +13,15 @@ import org.springframework.context.annotation.ComponentScan;
  *
  * @Description
  * @Author xiaou
- * @Date$ 2023/4/19
- * OSS启动类
+ * @Date$ 2023/4/25
  **/
 @SpringBootApplication(exclude = DataSourceAutoConfiguration.class)
 @ComponentScan(basePackages = {"com.xiaou"})
-@EnableFeignClients
-public class OssApplication {
+@EnableDiscoveryClient
+public class VodApplication {
+
     public static void main(String[] args) {
-        SpringApplication.run(OssApplication.class,args);
+        SpringApplication.run(VodApplication.class,args);
     }
+
 }

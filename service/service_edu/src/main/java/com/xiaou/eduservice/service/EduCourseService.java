@@ -3,6 +3,7 @@ package com.xiaou.eduservice.service;
 import com.xiaou.eduservice.entity.EduCourse;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.xiaou.eduservice.entity.vo.CourseInfo;
+import com.xiaou.eduservice.entity.vo.CrousePublishVo;
 
 /**
  * <p>
@@ -19,4 +20,8 @@ public interface EduCourseService extends IService<EduCourse> {
     CourseInfo getCrouseInfo(String crouseId);
 
     void updateCrouseInfo(CourseInfo courseInfo);
+
+    CrousePublishVo getCrousePublish(String crouseId);
+
+    void removeCrouse(String courseId);
 }

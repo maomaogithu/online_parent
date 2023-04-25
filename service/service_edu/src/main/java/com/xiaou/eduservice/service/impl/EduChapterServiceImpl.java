@@ -9,6 +9,7 @@ import com.xiaou.eduservice.mapper.EduChapterMapper;
 import com.xiaou.eduservice.service.EduChapterService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xiaou.eduservice.service.EduVideoService;
+import com.xiaou.servicebase.exceptionHandler.xiaouException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,12 +35,12 @@ public class EduChapterServiceImpl extends ServiceImpl<EduChapterMapper, EduChap
     public ArrayList<ChapterVo> getChapterVideoByCourseId(String courseId) {
         //1.根据课程id查询出所有的课程章节
         QueryWrapper<EduChapter> wrapperChapter = new QueryWrapper<>();
-        wrapperChapter.eq("courseId",courseId);
+        wrapperChapter.eq("course_id",courseId);
         List<EduChapter> chapterList = baseMapper.selectList(wrapperChapter);
 
         //2.根据课程id查询出所有的小节
         QueryWrapper<EduVideo> wrapperVideo = new QueryWrapper<>();
-        wrapperVideo.eq("courseId",courseId);
+        wrapperVideo.eq("course_id",courseId);
         List<EduVideo> videoList = videoService.list(wrapperVideo);
 
         //创建集合用于存放最终封装的数据
@@ -58,7 +59,7 @@ public class EduChapterServiceImpl extends ServiceImpl<EduChapterMapper, EduChap
             for (int k = 0; k < videoList.size(); k++) {
                 EduVideo eduVideo = videoList.get(k);
                 //判断小节里面的chapterid和章节里面的id是否一致
-                if(eduVideo.getChapterId().equals(chapterVo.getId())){
+                if(eduVideo.getChapterId().equals(eduChapter.getId())){
                     VideoVo videoVo = new VideoVo();
                     BeanUtils.copyProperties(eduVideo,videoVo);
                     //放到小节封装的集合中
@@ -68,5 +69,34 @@ public class EduChapterServiceImpl extends ServiceImpl<EduChapterMapper, EduChap
             chapterVo.setChildren(voList);
         }
         return finalList;
+    }
+
+    /**
+     * 删除章节
+     * @param chapterId
+     * @return
+     */
+    @Override
+    public boolean deleteChapter(String chapterId) {
+        //根据章节id去小节表里进行查询，如果有就不允许删除章节，没有删
+        QueryWrapper<EduVideo> eduVideoWrapper = new QueryWrapper<>();
+        eduVideoWrapper.eq("chapter_id",chapterId);
+
+        int count = videoService.count(eduVideoWrapper);//查询有无记录
+
+        if(count > 0){
+            throw new xiaouException(20001,"小节信息不存在，无法删除！");
+
+        }else {
+            int result = baseMapper.deleteById(chapterId);
+            return result > 0;
+        }
+    }
+
+    @Override
+    public void removeChapterByCrouseId(String courseId) {
+        QueryWrapper<EduChapter> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("course_id",courseId);
+        baseMapper.delete(queryWrapper);
     }
 }

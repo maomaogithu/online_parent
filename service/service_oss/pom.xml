@@ -39,6 +39,22 @@
            <artifactId>jaxb-runtime</artifactId>
            <version>2.3.3</version>
        </dependency>
+       <dependency>
+           <groupId>com.aliyun</groupId>
+           <artifactId>aliyun-java-sdk-vod</artifactId>
+           <scope>test</scope>
+       </dependency>
+       <dependency>
+           <groupId>com.xiaoyu</groupId>
+           <artifactId>service_edu</artifactId>
+           <version>0.0.1-SNAPSHOT</version>
+           <scope>test</scope>
+       </dependency>
+       <dependency>
+           <groupId>com.aliyun</groupId>
+           <artifactId>aliyun-sdk-vod-upload</artifactId>
+           <scope>test</scope>
+       </dependency>
    </dependencies>
 
 </project>

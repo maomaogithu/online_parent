@@ -3,10 +3,13 @@ package com.xiaou.eduservice.service.impl;
 import com.xiaou.eduservice.entity.EduCourse;
 import com.xiaou.eduservice.entity.EduCourseDescription;
 import com.xiaou.eduservice.entity.vo.CourseInfo;
+import com.xiaou.eduservice.entity.vo.CrousePublishVo;
 import com.xiaou.eduservice.mapper.EduCourseMapper;
+import com.xiaou.eduservice.service.EduChapterService;
 import com.xiaou.eduservice.service.EduCourseDescriptionService;
 import com.xiaou.eduservice.service.EduCourseService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.xiaou.eduservice.service.EduVideoService;
 import com.xiaou.servicebase.exceptionHandler.xiaouException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +27,12 @@ import org.springframework.stereotype.Service;
 public class EduCourseServiceImpl extends ServiceImpl<EduCourseMapper, EduCourse> implements EduCourseService {
     @Autowired
     private EduCourseDescriptionService descriptionService;
+
+    @Autowired
+    private EduVideoService videoService;
+
+    @Autowired
+    private EduChapterService chapterService;
 
 
     @Override
@@ -76,6 +85,29 @@ public class EduCourseServiceImpl extends ServiceImpl<EduCourseMapper, EduCourse
         eduCourseDescription.setDescription(courseInfo.getDescription());
         descriptionService.updateById(eduCourseDescription);
 
+    }
+    //根据课程id查询课程确认信息
+    @Override
+    public CrousePublishVo getCrousePublish(String crouseId) {
+        CrousePublishVo publisInfo = baseMapper.getCrousePublisInfo(crouseId);
+        return publisInfo;
+    }
 
+    @Override
+    public void removeCrouse(String courseId) {
+        //根据课程id删除描述
+        descriptionService.removeById(courseId);
+
+        //根据课程id删除章节
+        chapterService.removeChapterByCrouseId(courseId);
+
+        //根据课程id删除小节
+        videoService.removeVideoById(courseId);
+        
+        //根据课程id删除课程本身
+        int i = baseMapper.deleteById(courseId);
+        if(i == 0){//删除失败
+            throw new xiaouException(20001,"删除课程失败！");
+        }
     }
 }
