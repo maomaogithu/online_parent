@@ -17,7 +17,7 @@ import java.util.List;
  * @Date$ 2023/4/25
  **/
 @Component
-@FeignClient("service-vod") //你所调用的服务名称 这里调用的service-vod
+@FeignClient(name = "service-vod",fallback = VodFileDegradeFeignClient.class) //你所调用的服务名称 这里调用的service-vod
 public interface VodClient {
     //定义调用的路径
     @DeleteMapping("eduvod/video/removeMoreAlyVideo/{id}")
