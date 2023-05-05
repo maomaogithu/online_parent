@@ -7,7 +7,11 @@ import com.xiaou.educenter.entity.UcenterMember;
 import com.xiaou.educenter.entity.vo.RegisterVo;
 import com.xiaou.educenter.service.UcenterMemberService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.http.HttpRequest;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * <p>
@@ -19,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/educenter/ucenter-member")
+@EnableFeignClients
 @CrossOrigin
 public class UcenterMemberController {
     @Autowired
@@ -32,11 +37,20 @@ public class UcenterMemberController {
         return R.ok().data("token",token);
     }
     //注册
-
     @PostMapping("register")
     public R register(@RequestBody RegisterVo registerVo){
         memberService.register(registerVo);
         return R.ok();
+    }
+
+    //根据token返回用户id 根据用户id查询用户信息
+    @GetMapping("getMemberInfo")
+    public R getMemberInfo(HttpServletRequest request){
+        //调用JWT工具类获取id
+        String memberId = JwtUtils.getMemberIdByJwtToken(request);
+        //通过用户id查询用户信息
+        UcenterMember member = memberService.getById(memberId);
+        return R.ok().data("member",member);
     }
 }
 

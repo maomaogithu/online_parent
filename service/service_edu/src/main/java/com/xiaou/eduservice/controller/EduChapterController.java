@@ -27,9 +27,6 @@ public class EduChapterController {
     @Autowired
     private EduChapterService chapterService;
 
-    @Autowired
-
-
     //课程大纲列表 根据课程id进行查询
     @GetMapping("getChapterVideo/{courseId}")
     public R getChapterVideo(@PathVariable String courseId){
